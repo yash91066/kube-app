@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: vpromq01
-          image: memcached
+          image: rabbitmq
 
           ports:
             - name: vpromq01-port
