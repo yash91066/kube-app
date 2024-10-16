@@ -7,5 +7,5 @@ spec:
     app: vpromq01
   ports:
     - port: 15672
-      targetPort: 15672
+      targetPort: vpromq01-port
   type: ClusterIP
