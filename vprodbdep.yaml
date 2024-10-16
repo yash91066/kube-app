@@ -1,22 +1,24 @@
-apiVersion: app/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: vprodb
   labels:
-    app:
+    app: vprodb # Added value for the label
 spec:
   selector:
     matchLabels:
       app: vprodb
+  replicas: 1
   template:
     metadata:
       labels:
         app: vprodb
+
     spec:
       containers:
         - name: vprodb
           image: yashpatel2307/vprofiledb
-          volumePath:
+          volumeMounts: # Corrected key
             - mountPath: /var/lib/mysql
               name: vpro-db-data
           ports:
@@ -24,20 +26,20 @@ spec:
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
-                secretkeyRef:
+                secretKeyRef: # Corrected key
                   name: app-secret
                   key: db-pass
       nodeSelector:
         zone: ca-central-1a
-      volume:
+      volumes: # Corrected key
         - name: vpro-db-data
-          awsElasticBlockstore:
+          awsElasticBlockStore: # Corrected blockstore to BlockStore
             volumeID: vol-036b05377ccadb407
             fsType: ext4
       initContainers:
         - name: busybox
           image: busybox:latest
-          args: ["rm", "-rf", "var/lib/mysql/lost+found"]
-          volumePath:
+          args: ["rm", "-rf", "/var/lib/mysql/lost+found"] # Added a missing '/' in the path
+          volumeMounts: # Corrected key
             - mountPath: /var/lib/mysql
               name: vpro-db-data
